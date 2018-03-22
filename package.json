@@ -5,5 +5,8 @@
   "private": true,
   "dependencies": {
     "express": "4.x"
+  },
+  "devDependencies": {
+    "hbs": "^4.0.1"
   }
 }
