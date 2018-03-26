@@ -1,11 +1,11 @@
-const socket = io();
+var socket = io();
 
-const input = document.querySelector('.output-you');
-const output = document.querySelector('.output-bot');
+var input = document.querySelector('.output-you');
+var output = document.querySelector('.output-bot');
 
 //Web Speech API
-const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-const recognition = new SpeechRecognition();
+var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+var recognition = new SpeechRecognition();
 
 //设置一些属性变量来自定义语音识别
 //Language
@@ -43,6 +43,26 @@ recognition.addEventListener('speechend', function () {
 
 recognition.addEventListener('error', function (e) {
     output.textContent = 'Error: ' + e.error;
+});
+
+//合成语音并返回给前端
+function synthVoice(text) {
+    var synth = window.speechSynthesis;
+    var utterance = new SpeechSynthesisUtterance();
+    utterance.text = text;
+    synth.speak(utterance);
+}
+
+socket.on('bot reply',function (replyText) {
+    //call the function
+    synthVoice(replyText);
+
+    if (replyText === '') {
+        replyText = '对不起，没有匹配的回答。';
+    }
+
+    output.textContent = replyText;
+
 });
 
 
