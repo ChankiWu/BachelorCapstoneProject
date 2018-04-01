@@ -14,6 +14,17 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 var util = require('util');
 
+//load MySQL Module and Pool connections.
+var mysql = require('mysql');
+var connection = mysql.createConnection({
+    host     : 'localhost',
+    user     : 'root',
+    password : 'wqc960630',
+    port: '3306',
+    database: 'dmovie'
+});
+connection.connect();
+
 // 加载hbs模块
 var hbs = require('hbs');
 
@@ -33,16 +44,45 @@ app.get('/', function (req, res) {
 
 //webhook,handle entity and return results.
 app.post('/apiai',function (req,res) {
-    var response = "This is a sample response from your webhook!"; //Default response from the webhook to show it's working
-    //req, req.body, req.body.result is object.
-    console.log("APIAI Request is " +  util.inspect(req.body.result.parameters) + "\n" + Object.keys(req.body.result.parameters));
-    var reqkey = Object.keys(req.body.result.parameters);
-    console.log("Value is " + req.body.result.parameters[reqkey]);
 
-    res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
-    /*res.send(JSON.stringify({ "speech": response, "displayText": response
-        //"speech" is the spoken version of the response, "displayText" is the visual version
-    }));*/
+    //req.body is a json.
+    console.log("APIAI Request is " +  util.inspect(req.body.result.parameters));
+
+    //parameters is the entity.
+    var reqkey = Object.keys(req.body.result.parameters);
+    var reqval = req.body.result.parameters[reqkey];
+    console.log("Key is "+ reqkey + "\nValue is " + reqval);
+
+    //根据用户不同的请求匹配不同的entity
+    switch (reqkey.toString()){
+        case 'movie-genre':
+            //find corresponding results from Database
+            var  sql = 'select * from dmovie.top where genre like "%'+ reqval +'%" limit 5;';
+            connection.query(sql,function (err, result) {
+                if(err){
+                    console.log('[SELECT ERROR] - ',err.message);
+                    return;
+                }
+
+                console.log('--------------------------SELECT----------------------------');
+                var response = '';
+                for (var i=0;i<5;i++)
+                {
+                    response = response + result[i].name + " ";
+                }
+                res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                res.send(JSON.stringify({ "speech": response, "displayText": response
+                    //"speech" is the spoken version of the response, "displayText" is the visual version
+                }));
+            });
+            connection.end();
+            break;
+        case "movie-rate":
+            break;
+        default:
+            console.log("\ndefault switch");
+            break;
+    }
 
 });
 
@@ -59,6 +99,7 @@ io.on('connection', function (socket) {
     console.log('a user connected');
 
     socket.on('chat message', function (text) {
+        //get user's text form script.js.
         console.log('Message: ' + text);
 
         // Get a reply from API.ai
@@ -69,6 +110,8 @@ io.on('connection', function (socket) {
         apiaiReq.on('response', function (response) {
             var aiText = response.result.fulfillment.speech;
             console.log('Bot reply: ' + aiText);
+
+            //send response to script.js, frontend shows.
             socket.emit('bot reply', aiText);
         });
 

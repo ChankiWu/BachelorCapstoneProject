@@ -34,6 +34,7 @@ recognition.addEventListener('result', function (e) {
     console.log("The text is: " + text);
     console.log('Confidence: ' + e.results[0][0].confidence);
 
+    //send user's text yo index.js
     socket.emit('chat message', text);
 });
 
@@ -54,15 +55,15 @@ function synthVoice(text) {
 }
 
 socket.on('bot reply',function (replyText) {
-    //call the function
-    synthVoice(replyText);
 
     if (replyText === '') {
         replyText = '对不起，没有匹配的回答。';
     }
 
-    output.textContent = replyText;
+    //call the function
+    synthVoice(replyText);
 
+    output.textContent = replyText;
 });
 
 
