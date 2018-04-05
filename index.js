@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 var util = require('util');
 
+
 //load MySQL Module and Pool connections.
 var mysql = require('mysql');
 var connection = mysql.createConnection({
@@ -23,7 +24,7 @@ var connection = mysql.createConnection({
     port: '3306',
     database: 'dmovie'
 });
-connection.connect();
+
 
 // 加载hbs模块
 var hbs = require('hbs');
@@ -37,7 +38,7 @@ app.engine('html', hbs.__express);
 app.use(express.static(__dirname + '/views')); // html
 app.use(express.static(__dirname + '/public')); // js, css, images
 
-
+//routes
 app.get('/', function (req, res) {
     res.render('index');
 });
@@ -57,35 +58,152 @@ app.post('/apiai',function (req,res) {
     switch (reqkey.toString()){
         case 'movie-genre':
             //find corresponding results from Database
-            var  sql = 'select * from dmovie.top where genre like "%'+ reqval +'%" limit 5;';
-            connection.query(sql,function (err, result) {
+            var  sql1 = 'select * from dmovie.top where genre like "%'+ reqval +'%";';
+            connection.query(sql1,function (err, result) {
                 if(err){
                     console.log('[SELECT ERROR] - ',err.message);
                     return;
                 }
 
-                console.log('--------------------------SELECT----------------------------');
+                console.log('--------------------------SELECT  1----------------------------');
+
+                //默认展示五个
                 var response = '';
-                for (var i=0;i<5;i++)
-                {
-                    response = response + result[i].name + " ";
+                if (result.length >=5 ){
+                    for (var i=0;i<5;i++)
+                    {
+                        response = response + result[i].name + " ";
+                    }
+                    res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                    res.send(JSON.stringify({ "speech": response, "displayText": response
+                        //"speech" is the spoken version of the response, "displayText" is the visual version
+                    }));
                 }
-                res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
-                res.send(JSON.stringify({ "speech": response, "displayText": response
-                    //"speech" is the spoken version of the response, "displayText" is the visual version
-                }));
+                else{
+                    for (var j=0;j<result.length;j++)
+                    {
+                        response = response + result[j].name + " ";
+                    }
+                    res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                    res.send(JSON.stringify({ "speech": response, "displayText": response
+                        //"speech" is the spoken version of the response, "displayText" is the visual version
+                    }));
+                }
+
             });
-            connection.end();
             break;
-        case "movie-rate":
+        case "movie-actor":
+            //find corresponding results from Database
+            var  sql2 = 'select * from dmovie.top where actor like "%'+ reqval +'%";';
+            connection.query(sql2,function (err, result) {
+                if(err){
+                    console.log('[SELECT ERROR] - ',err.message);
+                    return;
+                }
+
+                console.log('--------------------------SELECT  2----------------------------');
+
+                //默认先展示五个
+                var response = '';
+                if (result.length >=5 ){
+                    for (var i=0;i<5;i++)
+                    {
+                        response = response + result[i].name + " ";
+                    }
+                    res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                    res.send(JSON.stringify({ "speech": response, "displayText": response
+                        //"speech" is the spoken version of the response, "displayText" is the visual version
+                    }));
+                }
+                else{
+                    for (var j=0;j<result.length;j++)
+                    {
+                        response = response + result[j].name + " ";
+                    }
+                    res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                    res.send(JSON.stringify({ "speech": response, "displayText": response
+                        //"speech" is the spoken version of the response, "displayText" is the visual version
+                    }));
+                }
+            });
+            break;
+        case "sys.number":
+            //find corresponding results from Database
+            var  sql3 = 'select * from dmovie.top where rate >='+ reqval +';';
+            connection.query(sql3,function (err, result) {
+                if(err){
+                    console.log('[SELECT ERROR] - ',err.message);
+                    return;
+                }
+
+                console.log('--------------------------SELECT  3----------------------------');
+
+                //默认先展示五个
+                var response = '';
+                if (result.length >=5 ){
+                    for (var i=0;i<5;i++)
+                    {
+                        response = response + result[i].name + " ";
+                    }
+                    res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                    res.send(JSON.stringify({ "speech": response, "displayText": response
+                        //"speech" is the spoken version of the response, "displayText" is the visual version
+                    }));
+                }
+                else{
+                    for (var j=0;j<result.length;j++)
+                    {
+                        response = response + result[j].name + " ";
+                    }
+                    res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                    res.send(JSON.stringify({ "speech": response, "displayText": response
+                        //"speech" is the spoken version of the response, "displayText" is the visual version
+                    }));
+                }
+            });
+            break;
+        case "movie-country":
+            //find corresponding results from Database
+            var  sql4 = 'select * from dmovie.top where country like "%'+ reqval +'%";';
+            connection.query(sql4,function (err, result) {
+                if(err){
+                    console.log('[SELECT ERROR] - ',err.message);
+                    return;
+                }
+
+                console.log('--------------------------SELECT  4----------------------------');
+
+                //默认先展示五个
+                var response = '';
+                if (result.length >=5 ){
+                    for (var i=0;i<5;i++)
+                    {
+                        response = response + result[i].name + " ";
+                    }
+                    res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                    res.send(JSON.stringify({ "speech": response, "displayText": response
+                        //"speech" is the spoken version of the response, "displayText" is the visual version
+                    }));
+                }
+                else{
+                    for (var j=0;j<result.length;j++)
+                    {
+                        response = response + result[j].name + " ";
+                    }
+                    res.setHeader('Content-Type', 'application/json'); //Requires application/json MIME type
+                    res.send(JSON.stringify({ "speech": response, "displayText": response
+                        //"speech" is the spoken version of the response, "displayText" is the visual version
+                    }));
+                }
+            });
             break;
         default:
             console.log("\ndefault switch");
             break;
     }
-
 });
 
+//Server
 var server = app.listen(5000, function () {
     console.log("Express server listening on port: " + server.address().port + app.settings.env);
 });
