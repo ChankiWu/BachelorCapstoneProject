@@ -12,6 +12,7 @@ var recognition = new SpeechRecognition();
 recognition.lang = 'zh-CN';
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
+var voices = [];
 
 //监听点击事件来初始化语音识别
 document.querySelector('button').addEventListener('click', function () {
@@ -50,6 +51,12 @@ recognition.addEventListener('error', function (e) {
 function synthVoice(text) {
     var synth = window.speechSynthesis;
     var utterance = new SpeechSynthesisUtterance();
+
+    voices = synth.getVoices();
+    for(var i = 0; i < voices.length ; i++) {
+        utterance.voice = voices[i];
+    }
+
     utterance.text = text;
     synth.speak(utterance);
 }

@@ -127,7 +127,7 @@ app.post('/apiai',function (req,res) {
                 }
             });
             break;
-        case "sys.number":
+        /*case "sys.number":
             //find corresponding results from Database
             var  sql3 = 'select * from dmovie.top where rate >='+ reqval +';';
             connection.query(sql3,function (err, result) {
@@ -161,7 +161,7 @@ app.post('/apiai',function (req,res) {
                     }));
                 }
             });
-            break;
+            break;*/
         case "movie-country":
             //find corresponding results from Database
             var  sql4 = 'select * from dmovie.top where country like "%'+ reqval +'%";';
@@ -226,10 +226,12 @@ io.on('connection', function (socket) {
         });
 
         apiaiReq.on('response', function (response) {
+
+            //aiText就是我从数据库先发给API.AI，再返回来的回答
             var aiText = response.result.fulfillment.speech;
             console.log('Bot reply: ' + aiText);
 
-            //send response to script.js, frontend shows.
+            //send response to script.js, frontend web speech API speaks.
             socket.emit('bot reply', aiText);
         });
 
