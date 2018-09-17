@@ -1,6 +1,6 @@
 # Gradproject
 
-This is Graduation project for University Bachelor's degree.
+This is Graduation project for University's last dance.
 
 his is how this web app works:
 
