@@ -2,7 +2,7 @@
 
 This is Graduation project for University's last dance.
 
-his is how this web app works:
+Follwing is how this web app works:
 
 1.Using the Web Speech API’s SpeechRecognition interface to listen your voice from a microphone
 
