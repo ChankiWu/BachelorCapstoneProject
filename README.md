@@ -1,6 +1,6 @@
-# Gradproject
+# BachelorCapstoneProject
 
-This is Graduation project for University's last dance.
+This is Bachelor's Capstone Project for undergrad's last dance.
 
 Following is how this web app works:
 
