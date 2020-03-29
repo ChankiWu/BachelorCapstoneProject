@@ -1,6 +1,7 @@
 # BachelorCapstoneProject
 
-### This is Bachelor's Capstone Project for undergrad's last dance.
+### This is a Chatbot based on Dialogflow and Web Speech API.
+#### Besides, this is Bachelor's Capstone Project for undergrad's last dance.
 
 Following is how this web app works:
 
