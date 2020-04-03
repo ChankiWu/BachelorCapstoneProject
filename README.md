@@ -1,6 +1,7 @@
 # BachelorCapstoneProject
 
 ### This is a Chatbot based on Dialogflow and Web Speech API.
+### 中文智能语音聊天机器人
 #### Besides, this is Bachelor's Capstone Project for undergrad's last dance.
 
 Following is how this web app works:
